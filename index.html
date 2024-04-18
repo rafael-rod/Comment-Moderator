@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clasificador de Comentarios</title>
+    <style>
+        /* Estilos CSS */
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #000; /* Fondo negro */
+            color: #fff;
+            overflow-x: hidden;
+        }
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #111; /* Fondo del contenedor */
+            border-radius: 20px;
+            box-shadow: 0 0 20px rgba(72, 0, 255, 0.7); /* Sombra */
+            animation: neon-glow 1.5s infinite alternate;
+        }
+        @keyframes neon-glow {
+            from {
+                box-shadow: 0 0 10px rgba(72, 0, 255, 0.7),
+                            0 0 20px rgba(72, 0, 255, 0.5),
+                            0 0 30px rgba(72, 0, 255, 0.3);
+            }
+            to {
+                box-shadow: 0 0 15px rgba(72, 0, 255, 0.5),
+                            0 0 30px rgba(72, 0, 255, 0.4),
+                            0 0 40px rgba(72, 0, 255, 0.2);
+            }
+        }
+        h1 {
+            text-align: center;
+            color: #ae3dff; /* Color del encabezado */
+            font-size: 36px;
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px #ae3dff, 0 0 20px #ae3dff, 0 0 30px #ae3dff;
+            animation: neon-flicker 1s infinite alternate; /* Animación del título */
+        }
+        h3 {
+            text-align: center;
+            color: #ae3dff; /* Color del encabezado */
+            font-size: 18px;
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px #ae3dff, 0 0 20px #ae3dff, 0 0 30px #ae3dff;
+            animation: neon-flicker 1s infinite alternate; /* Animación del título */
+        }
+        @keyframes neon-flicker {
+            from {
+                text-shadow: 0 0 10px #ae3dff, 0 0 20px #ae3dff, 0 0 30px #ae3dff;
+            }
+            to {
+                text-shadow: none;
+            }
+        }
+        #comments {
+            margin-top: 20px;
+            animation: neon-blink 1s infinite alternate; /* Animación de los comentarios */
+        }
+        @keyframes neon-blink {
+            from {
+                opacity: 1;
+            }
+            to {
+                opacity: 0.7;
+            }
+        }
+        .comment {
+            margin-bottom: 10px;
+            padding: 10px;
+            border-radius: 10px;
+            background-color: #6a0572; /* Fondo del comentario */
+            box-shadow: 0 0 10px #6a0572;
+            animation: neon-pulse 1.5s infinite alternate; /* Animación de los comentarios individuales */
+        }
+        @keyframes neon-pulse {
+            from {
+                background-color: #6a0572;
+                box-shadow: 0 0 10px #6a0572;
+            }
+            to {
+                background-color: #9d4edd;
+                box-shadow: 0 0 20px #9d4edd, 0 0 30px #9d4edd;
+            }
+        }
+        .comment p {
+            margin: 0;
+            color: #fff; /* Texto blanco */
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        #textInput {
+            width: calc(100% - 22px);
+            padding: 10px;
+            margin-top: 20px;
+            border: none;
+            border-radius: 10px;
+            background-color: #6a0572; /* Fondo del campo de texto */
+            color: #fff;
+            font-size: 16px;
+            animation: neon-flicker 1s infinite alternate; /* Animación del campo de texto */
+        }
+        #classifyButton {
+            display: block;
+            width: calc(100% - 22px);
+            padding: 10px;
+            margin-top: 10px;
+            background-color: #ae3dff; /* Color del botón */
+            color: #fff; /* Texto blanco */
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s; /* Transición suave */
+            animation: neon-glow 1.5s infinite alternate; /* Animación del botón */
+        }
+        #classifyButton:hover {
+            background-color: #9d4edd; /* Cambio de color al pasar el cursor */
+        }
+        /* Estilos para la subida de archivos */
+        #drop-area {
+            border: 2px dashed #ae3dff; /* Borde punteado */
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: border-color 0.3s; /* Transición suave del color del borde */
+            color: #ae3dff;
+        }
+        #drop-area.highlight {
+            border-color: #9d4edd; /* Color de borde resaltado */
+        }
+        /* Estilos para las instrucciones de uso */
+        #instructions {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #2a2a2a; /* Fondo de las instrucciones */
+            border-radius: 10px;
+        }
+        #instructions h2 {
+            color: #ff7f50; /* Color del título de instrucciones */
+            font-size: 24px;
+            margin-bottom: 10px;
+            /* text-shadow: 0 0 10px #ff7f50, 0 0 20px #ff7f50, 0 0 30px #ff7f50; */
+        }
+        #instructions p {
+            color: #fff; /* Color del texto */
+            font-size: 18px;
+            margin-bottom: 15px;
+            /* text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 15px #fff; */
+        }
+        #instructions ol {
+            color: #61dafb; /* Color del texto de instrucciones */
+            padding-left: 20px;
+        }
+        #instructions pre {
+            background-color: #333; /* Fondo del código */
+            color: #61dafb; /* Color del código */
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            /* text-shadow: 0 0 5px #61dafb, 0 0 10px #61dafb, 0 0 15px #61dafb; */
+        }
+        #instructions .note {
+            font-size: 16px;
+            color: #9d4edd; /* Color de la nota */
+            /* text-shadow: 0 0 5px #9d4edd, 0 0 10px #9d4edd, 0 0 15px #9d4edd; */
+        }
+        #downloadButton {
+    display: block;
+    width: calc(100% - 22px);
+    padding: 10px;
+    margin-top: 10px;
+    background-color: #ae3dff; /* Mismo color que classifyButton */
+    color: #fff; /* Mismo color que classifyButton */
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s; /* Transición suave */
+    animation: neon-glow 1.5s infinite alternate; /* Animación del botón */
+}
+
+#downloadButton:hover {
+    background-color: #9d4edd; /* Cambio de color al pasar el cursor */
+}
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Moderador de Comentarios</h1>
+        <h3>Hecho por Rafael R.</h3>
+        <div id="drop-area" ondragover="event.preventDefault()" ondrop="handleDrop(event)" onclick="document.getElementById('fileInput').click()">
+            Arrastra y suelta aquí o haz clic para seleccionar un archivo JSON
+        </div>
+        <input type="file" id="fileInput" accept=".json" style="display: none;" onchange="handleFiles(event)">
+        <div id="comments"></div>
+        <div id="classifiedComments"></div>
+        <textarea id="textInput" rows="4" placeholder="Escribe un comentario..."></textarea>
+        <button id="classifyButton">Clasificar Comentario</button>
+        <button id="downloadButton">Descargar Resultados</button>
+        <div id="instructions">
+            <h2>Instrucciones de Uso:</h2>
+            <p>¡Bienvenido al Clasificador de Comentarios! Los clasifica entre positivo, negativo o neutro. Hay dos opciones para usar la app:</p>
+            <ol>
+                <li>
+                    <p>Escribe un comentario en el campo de texto y haz clic en el botón "Clasificar Comentario".</p>
+                </li>
+                <li>
+                    <p>Sube un archivo JSON con tus comentarios siguiendo el formato:</p>
+                    <pre>{"comment": "¡Este vídeo es genial! Me encanta."},</pre>
+                </li>
+            </ol>
+        </div>
+    </div>
+
+    <script>
+        var classifiedComments = []; // Variable global para almacenar los comentarios clasificados
+
+        document.getElementById('classifyButton').addEventListener('click', function() {
+            var comment = document.getElementById('textInput').value;
+            if (comment === '') {
+                alert('Por favor, ingresa un comentario antes de clasificar.');
+                return; // Salimos de la función si no hay texto
+            }
+            classifyComment(comment);
+        });
+
+        function handleFiles(event) {
+            var file = event.target.files[0];
+            var reader = new FileReader();
+
+            reader.onload = function() {
+                var comments = JSON.parse(reader.result);
+                classifyComments(comments); // Envía los comentarios al servidor para clasificar automáticamente
+            };
+
+            reader.readAsText(file);
+        }
+
+        function handleDrop(event) {
+            event.preventDefault();
+            var file = event.dataTransfer.files[0];
+            var reader = new FileReader();
+
+            reader.onload = function() {
+                var comments = JSON.parse(reader.result);
+                classifyComments(comments); // Envía los comentarios al servidor para clasificar automáticamente
+            };
+
+            reader.readAsText(file);
+        }
+
+        function classifyComment(comment) {
+            console.log("Enviando comentario:", comment);
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', 'http://127.0.0.1:5000/classify', true);
+            xhr.setRequestHeader('Content-Type', 'application/json');
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    var response = JSON.parse(xhr.responseText);
+                    console.log("Respuesta del servidor:", response);
+                    showClassifiedComment(comment, response.label);
+                }
+            };
+            var data = JSON.stringify({ comment: comment });
+            xhr.send(data);
+        }
+
+        function classifyComments(comments) {
+            comments.forEach(function(item) {
+                var comment = item.comment;
+                classifyComment(comment);
+            });
+        }
+
+        function showClassifiedComment(comment, label) {
+            var container = document.getElementById('classifiedComments');
+
+            var commentElement = document.createElement('div');
+            commentElement.classList.add('comment');
+
+            var p = document.createElement('p');
+            p.textContent = comment;
+
+            var classification = document.createElement('p');
+            classification.textContent = 'Clasificación: ' + label;
+
+            commentElement.appendChild(p);
+            commentElement.appendChild(classification);
+
+            container.appendChild(commentElement);
+
+            // Almacena los comentarios clasificados en la variable global
+            classifiedComments.push({ comment: comment, label: label });
+
+            // Mostrar el botón de descarga después de clasificar los comentarios
+            document.getElementById('downloadButton').style.display = 'block';
+        }
+
+        document.getElementById('downloadButton').addEventListener('click', function() {
+            var comments = document.getElementById('comments').innerHTML.trim(); // Obtener el contenido de los comentarios y eliminar espacios en blanco al inicio y al final
+            downloadJSON(classifiedComments);
+        });
+
+        function downloadJSON(data) {
+            var json = JSON.stringify(data, null, 2);
+            var blob = new Blob([json], { type: 'application/json' });
+            var url = URL.createObjectURL(blob);
+            var a = document.createElement('a');
+            a.href = url;
+            a.download = 'classified_comments.json';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+    </script>
+</body>
+</html>
