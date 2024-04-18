@@ -4,7 +4,7 @@
 
 This project is a web application for classifying text comments as positive, negative, or neutral using a pre-trained Support Vector Machine (SVM) model.
 
-![app_interface](https://github.com/rafael-rod/Comment-Classifier/raw/main/comment_classifier.png)
+![app_interface](https://github.com/rafael-rod/Comment-Moderator/blob/main/comment_moderator.png)
 
 ## Installation
 
